@@ -29,10 +29,6 @@ class My_Application_Resource_Doctrine extends Zend_Application_Resource_Resourc
                     $resource->init();
                     break;
 
-                case 'manager':
-                    $this->_setAttributes($value);
-                    break;
-
                 case 'paths':
                     $resource = new My_Application_Resource_Doctrine_Paths($value);
                     $paths = $resource->init();
@@ -55,6 +51,11 @@ class My_Application_Resource_Doctrine extends Zend_Application_Resource_Resourc
     {
         if (null === $this->_manager) {
             $this->_manager = Doctrine_Manager::getInstance();
+
+            $options = $this->getOptions();
+            if ((is_array($options)) && (array_key_exists('manager', $options))) {
+                $this->_setAttributes($options['manager']);
+            }
         }
 
         return $this->_manager;
