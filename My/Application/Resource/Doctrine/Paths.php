@@ -5,8 +5,7 @@ class My_Application_Resource_Doctrine_Paths extends Zend_Application_Resource_R
      * Defined by Zend_Application_Resource_Resource
      * 
      * @return array
-     * @todo Model loading
-     * @todo Handle modularity
+     * @todo Handle modularity and model loading
      */
     public function init()
     {

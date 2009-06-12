@@ -37,6 +37,28 @@ class My_Application_Resource_Doctrine_Connections extends Zend_Application_Reso
     }
 
     /**
+     * Retrieve a Doctrine_Cache instance
+     * 
+     * @param array $options
+     * @return bool|Doctrine_Cache
+     */
+    protected function _getCache(array $options = null)
+    {
+        if ((is_array($options)) && (array_key_exists('class', $options))) {
+            $class = $options['class'];
+            if (class_exists($class)) {
+                $cacheOptions = array();
+                if ((is_array($options['options'])) && (array_key_exists('options', $options))) {
+                    $cacheOptions = $options['options'];
+                }
+                return new $class($cacheOptions);
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get DSN string
      * 
      * @param string|array $dsn
