@@ -1,5 +1,5 @@
 <?php
-class My_Doctrine_Log_Writer_Table extends Zend_Log_Writer_Abstract
+class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
 {
     /**
      * @var string

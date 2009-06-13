@@ -1,5 +1,5 @@
 <?php
-class My_Application_Resource_Logs extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Logs extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Zend_Log
@@ -91,7 +91,7 @@ class My_Application_Resource_Logs extends Zend_Application_Resource_ResourceAbs
                             $columnMap = (array) $writerOptions['columnMap'];
                         }
 
-                        $writers[] = new My_Doctrine_Log_Writer_Table($class, $columnMap);
+                        $writers[] = new Parables_Log_Writer_Doctrine($class, $columnMap);
                     }
                     break;
 

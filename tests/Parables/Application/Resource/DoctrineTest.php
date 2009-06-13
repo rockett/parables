@@ -54,7 +54,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = new My_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
         $manager = Doctrine_Manager::getInstance();
@@ -75,7 +75,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = new My_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
         $manager = Doctrine_Manager::getInstance();
@@ -97,7 +97,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = new My_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
         $paths = $values['paths'];
@@ -119,7 +119,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
             ),
         );
 
-        $resource = new My_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrine($options);
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
     }

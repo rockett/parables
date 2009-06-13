@@ -1,5 +1,5 @@
 <?php
-class My_Application_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Doctrine_Manager
@@ -25,12 +25,12 @@ class My_Application_Resource_Doctrine extends Zend_Application_Resource_Resourc
             switch (strtolower($key))
             {
                 case 'connections':
-                    $resource = new My_Application_Resource_Doctrine_Connections($value);
+                    $resource = new Parables_Application_Resource_Doctrine_Connections($value);
                     $resource->init();
                     break;
 
                 case 'paths':
-                    $resource = new My_Application_Resource_Doctrine_Paths($value);
+                    $resource = new Parables_Application_Resource_Doctrine_Paths($value);
                     $paths = $resource->init();
                     break;
 

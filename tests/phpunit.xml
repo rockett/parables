@@ -2,8 +2,8 @@
     convertNoticesToExceptions="true" convertWarningsToExceptions="true"
     stopOnFailure="true" syntaxCheck="true">
 
-    <testsuite name="My Library">
-        <directory>./My</directory>
+    <testsuite name="Parables Library">
+        <directory>./Parables</directory>
     </testsuite>
 
     <logging>

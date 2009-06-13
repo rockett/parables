@@ -1,5 +1,5 @@
 <?php
-class My_Application_Resource_Doctrine_Connections extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctrine_Connections extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Doctrine_Connection_Common

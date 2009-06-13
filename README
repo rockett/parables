@@ -1,0 +1,35 @@
+Parables is a sandbox for my personal experimental work with the Zend
+Framework as well as proposals submitted to the ZF project.
+
+See http://framework.zend.com/wiki/display/ZFPROP/Home
+
+The auth adapter and paginator adapter are not my work, but are included here
+for convenience and so as not to recreate the wheel. Thanks to the authors of
+those components. I hope to see a Doctrine extras library at some point but
+understand if is not a likely priority for the ZF team. In the meantime..
+
+Parables/
+|-- Application
+|   `-- Resource
+|       |-- Doctrine
+|       |   |-- Connections.php
+|       |   `-- Paths.php
+|       |-- Doctrine.php
+|       |-- Logs.php
+|       `-- Namespaces.php
+|-- Auth
+|   `-- Adapter
+|       `-- Doctrine.php
+|-- Controller
+|   `-- Plugin
+|       `-- Profiler.php
+|-- Log
+|   `-- Writer
+|       `-- Doctrine.php
+|-- Paginator
+|   `-- Adapter
+|       `-- Doctrine.php
+`-- Session
+    `-- SaveHandler
+        `-- Doctrine.php
+

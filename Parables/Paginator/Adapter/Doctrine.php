@@ -1,5 +1,5 @@
 <?php
-class My_Doctrine_Paginator_Adapter_Query implements Zend_Paginator_Adapter_Interface
+class Parables_Paginator_Adapter_Doctrine implements Zend_Paginator_Adapter_Interface
 {
     const ROW_COUNT_COLUMN = 'zend_paginator_row_count';
 

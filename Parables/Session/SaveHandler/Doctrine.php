@@ -1,5 +1,5 @@
 <?php
-class My_Doctrine_Session_SaveHandler_Table implements Zend_Session_SaveHandler_Interface
+class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_Interface
 {
     const DATA_COLUMN           = 'dataColumn';
     const LIFETIME_COLUMN       = 'lifetimeColumn';
@@ -121,7 +121,7 @@ class My_Doctrine_Session_SaveHandler_Table implements Zend_Session_SaveHandler_
      *
      * @param int $lifetime
      * @param boolean $overrideLifetime (optional)
-     * @return My_Doctrine_Session_SaveHandler_Table
+     * @return Parables_Session_SaveHandler_Table
      * @throws Zend_Session_SaveHandler_Exception
      */
     public function setLifetime($lifetime, $overrideLifetime = null)
@@ -157,7 +157,7 @@ class My_Doctrine_Session_SaveHandler_Table implements Zend_Session_SaveHandler_
      * overridden
      *
      * @param boolean $overrideLifetime
-     * @return My_Doctrine_Session_SaveHandler_Table
+     * @return Parables_Session_SaveHandler_Table
      */
     public function setOverrideLifetime($overrideLifetime)
     {
@@ -180,7 +180,7 @@ class My_Doctrine_Session_SaveHandler_Table implements Zend_Session_SaveHandler_
      * Set primary key column
      *
      * @param string|array $key
-     * @return My_Doctrine_Session_SaveHandler_Table
+     * @return Parables_Session_SaveHandler_Table
      * @throws Zend_Session_SaveHandler_Exception
      */
     public function setPrimaryKeyColumn($key = 'id')
@@ -209,7 +209,7 @@ class My_Doctrine_Session_SaveHandler_Table implements Zend_Session_SaveHandler_
      * Set session table name
      *
      * @param string $name
-     * @return My_Doctrine_Session_SaveHandler_Table
+     * @return Parables_Session_SaveHandler_Table
      */
     public function setTableName($name = 'Session')
     {

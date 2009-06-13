@@ -1,5 +1,5 @@
 <?php
-class My_Application_Resource_Namespaces extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Namespaces extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Zend_Session_Namespace

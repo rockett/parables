@@ -1,5 +1,5 @@
 <?php
-class My_Doctrine_Auth_Adapter_Table implements Zend_Auth_Adapter_Interface
+class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
 {
     /**
      * @var Doctrine_Connection_Common

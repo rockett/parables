@@ -1,5 +1,5 @@
 <?php
-class My_Controller_Plugin_Profiler extends Zend_Controller_Plugin_Abstract
+class Parables_Controller_Plugin_Profiler extends Zend_Controller_Plugin_Abstract
 {
     /**
      * @var Zend_Log
