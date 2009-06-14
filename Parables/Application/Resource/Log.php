@@ -1,5 +1,5 @@
 <?php
-class Parables_Application_Resource_Logs extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Log extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Zend_Log
@@ -13,7 +13,7 @@ class Parables_Application_Resource_Logs extends Zend_Application_Resource_Resou
      */
     public function init()
     {
-        $log = $this->getLogs();
+        $log = $this->getLog();
 
         foreach ($this->getOptions() as $key => $values) {
             switch (strtolower($key)) {
@@ -45,7 +45,7 @@ class Parables_Application_Resource_Logs extends Zend_Application_Resource_Resou
      *
      * @return  Zend_Log
      */
-    public function getLogs()
+    public function getLog()
     {
         if (null === $this->_log) {
             $this->_log = new Zend_Log();

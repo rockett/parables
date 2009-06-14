@@ -9,8 +9,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
     /**
      * Defined by Zend_Application_Resource_Resource
      * 
-     * @return void
-     * @throws Zend_Application_Resource_Exception
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
      */
     public function init()
     {
@@ -39,8 +39,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
     /**
      * Retrieve a Doctrine_Cache instance
      * 
-     * @param array $options
-     * @return bool|Doctrine_Cache
+     * @param   array $options
+     * @return  bool|Doctrine_Cache
      */
     protected function _getCache(array $options = null)
     {
@@ -61,9 +61,9 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
     /**
      * Get DSN string
      * 
-     * @param string|array $dsn
-     * @return string
-     * @throws Zend_Application_Resource_Exception
+     * @param   string|array $dsn
+     * @return  string
+     * @throws  Zend_Application_Resource_Exception
      */
     protected function _getDsn($dsn = null)
     {
@@ -91,8 +91,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
     /**
      * Get connection options string from an array
      * 
-     * @param array $options
-     * @return string
+     * @param   array $options
+     * @return  string
      */
     protected function _getDsnOptions(array $options = null)
     {
@@ -112,9 +112,9 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
     /**
      * Set connection attributes
      *
-     * @param array $options
-     * @return void
-     * @throws Zend_Application_Resource_Exception
+     * @param   array $options
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
      */
     protected function _setAttributes(array $options = null)
     {
@@ -148,9 +148,9 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
     /**
      * Set connection listeners
      *
-     * @param array $options
-     * @return void
-     * @throws Zend_Application_Resource_Exception
+     * @param   array $options
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
      */
     protected function _setListeners(array $options = null)
     {

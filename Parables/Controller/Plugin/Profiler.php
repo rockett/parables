@@ -8,39 +8,33 @@ class Parables_Controller_Plugin_Profiler extends Zend_Controller_Plugin_Abstrac
 
     public function routeStartup(Zend_Controller_Request_Abstract $request)
     {
-        $front = Zend_Controller_Front::getInstance();
-        if ($bootstrap = $front->getParam('bootstrap')) {
-            if ($bootstrap->hasResource('logs')) {
-                $this->_logger = $bootstrap->getResource('logs');
-            }
-        }
-
-        $this->_loggerEvent('routeStartup');
+        $this->_logger = new Zend_Log(new Zend_Log_Writer_Firebug());
+        $this->_logEvent('routeStartup');
     }
 
     public function routeShutdown(Zend_Controller_Request_Abstract $request)
     {
-        $this->_loggerEvent('routeShutdown');
+        $this->_logEvent('routeShutdown');
     }
 
     public function dispatchLoopStartup(Zend_Controller_Request_Abstract $request)
     {
-        $this->_loggerEvent('dispatchLoopStartup');
+        $this->_logEvent('dispatchLoopStartup');
     }
 
     public function preDispatch(Zend_Controller_Request_Abstract $request) 
     {
-        $this->_loggerEvent('preDispatch');
+        $this->_logEvent('preDispatch');
     }
 
     public function postDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $this->_loggerEvent('postDispatch');
+        $this->_logEvent('postDispatch');
     }
 
     public function dispatchLoopShutdown()
     {
-        $this->_loggerEvent('dispatchLoopShutdown');
+        $this->_logEvent('dispatchLoopShutdown');
         $this->_logDoctrine(true);
     }
 
@@ -89,7 +83,7 @@ class Parables_Controller_Plugin_Profiler extends Zend_Controller_Plugin_Abstrac
         $this->_logger->info(sprintf('%d queries from %d connections in %s seconds', $queryCount, count($profilers), round($total, 4)));
     }
 
-    private function _loggerEvent($data = '')
+    private function _logEvent($data = '')
     {
         if (isset($this->_logger)) {
             $this->_logger->info(sprintf('%s @ %s', $data, round($this->_getTime(), 4)));

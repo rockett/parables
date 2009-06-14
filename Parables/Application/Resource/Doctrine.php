@@ -9,7 +9,7 @@ class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_R
     /**
      * Defined by Zend_Application_Resource_Resource
      * 
-     * @return array
+     * @return  array
      */
     public function init()
     {
@@ -45,7 +45,7 @@ class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_R
     /**
      * Retrieve Doctrine_Manager instance
      *
-     * @return Doctrine_Manager
+     * @return  Doctrine_Manager
      */
     public function getManager()
     {
@@ -64,8 +64,8 @@ class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_R
     /**
      * Retrieve a Doctrine_Cache instance
      * 
-     * @param array $options
-     * @return bool|Doctrine_Cache
+     * @param   array $options
+     * @return  bool|Doctrine_Cache
      */
     protected function _getCache(array $options = null)
     {
@@ -86,8 +86,8 @@ class Parables_Application_Resource_Doctrine extends Zend_Application_Resource_R
     /**
      * Set manager attributes
      *
-     * @param array $options
-     * @return void
+     * @param   array $options
+     * @return  void
      */
     protected function _setAttributes(array $options = null)
     {

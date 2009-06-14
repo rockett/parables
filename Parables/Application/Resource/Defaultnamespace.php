@@ -1,5 +1,5 @@
 <?php
-class Parables_Application_Resource_Namespaces extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Defaultnamespace extends Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Zend_Session_Namespace
@@ -15,7 +15,7 @@ class Parables_Application_Resource_Namespaces extends Zend_Application_Resource
     {
         // Ensure that session options have been set
         $this->getBootstrap()->bootstrap('session');
-        return $this->getDefaultNamespace();
+        return $this->getDefaultnamespace();
     }
 
     /**
@@ -23,7 +23,7 @@ class Parables_Application_Resource_Namespaces extends Zend_Application_Resource
      *
      * @return  Zend_Session_Namespace
      */
-    public function getDefaultNamespace()
+    public function getDefaultnamespace()
     {
         if (null === $this->_defaultNamespace) {
             Zend_Session::start();
