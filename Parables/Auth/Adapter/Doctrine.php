@@ -2,61 +2,80 @@
 class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
 {
     /**
-     * @var Doctrine_Connection_Common
+     * Database Connection
+     *
+     * @var Zend_Db_Adapter_Abstract
      */
     protected $_conn = null;
 
     /**
+     * $_tableName - the table name to check
+     *
      * @var string
      */
     protected $_tableName = null;
 
     /**
+     * $_identityColumn - the column to use as the identity
+     *
      * @var string
      */
     protected $_identityColumn = null;
 
     /**
+     * $_credentialColumns - columns to be used as the credentials
+     *
      * @var string
      */
     protected $_credentialColumn = null;
 
     /**
+     * $_identity - Identity value
+     *
      * @var string
      */
     protected $_identity = null;
 
     /**
+     * $_credential - Credential values
+     *
      * @var string
      */
     protected $_credential = null;
 
     /**
+     * $_credentialTreatment - Treatment applied to the credential, such as MD5() or PASSWORD()
+     *
      * @var string
      */
     protected $_credentialTreatment = null;
 
     /**
+     * $_authenticateResultInfo
+     *
      * @var array
      */
     protected $_authenticateResultInfo = null;
     
     /**
+     * $_resultRow - Results of database authentication query
+     *
      * @var array
      */
     protected $_resultRow = null;
 
     /**
-     * Sets configuration options
+     * __construct() - Sets configuration options
      *
      * @param  Zend_Db_Adapter_Abstract $zendDb
-     * @param  string $tableName
-     * @param  string $identityColumn
-     * @param  string $credentialColumn
-     * @param  string $credentialTreatment
+     * @param  string                   $tableName
+     * @param  string                   $identityColumn
+     * @param  string                   $credentialColumn
+     * @param  string                   $credentialTreatment
      * @return void
      */
-    public function __construct(Doctrine_Connection_Common $conn = null, $tableName = null, $identityColumn = null, $credentialColumn = null, $credentialTreatment = null)
+    public function __construct(Doctrine_Connection_Common $conn = null, $tableName = null, $identityColumn = null,
+                                $credentialColumn = null, $credentialTreatment = null)
     {
         if (null !== $conn) {
             $this->setConnection($conn);
@@ -80,7 +99,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
     
     /**
-     * Set the connection to the database
+     * setConnection() - set the connection to the database
      *
      * @param  Doctrine_Connection_Common $conn
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -92,13 +111,15 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
     
     /**
-     * Get the connection to the database
+     * getConnection() - get the connection to the database
      * 
      * @return Doctrine_Connection_Common|null
      */
     public function getConnection()
     {
-        if ((null === $this->_conn) && (null !== $this->_tableName)) {
+        if (null === $this->_conn &&
+            null !== $this->_tableName) {
+            
             $this->_conn = Doctrine::getConnectionByTableName($this->_tableName);
         }
         
@@ -106,7 +127,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Set the table name to be used in the select query
+     * setTableName() - set the table name to be used in the select query
      *
      * @param  string $tableName
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -118,7 +139,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Set the column name to be used as the identity column
+     * setIdentityColumn() - set the column name to be used as the identity column
      *
      * @param  string $identityColumn
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -130,7 +151,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Set the column name to be used as the credential column
+     * setCredentialColumn() - set the column name to be used as the credential column
      *
      * @param  string $credentialColumn
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -142,13 +163,18 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Allows the developer to pass a parameterized string that is
+     * setCredentialTreatment() - allows the developer to pass a parameterized string that is
      * used to transform or treat the input credential data
-     * 
-     * In many cases, passwords and other sensitive data are encrypted, 
-     * hashed, encoded, obscured, or otherwise treated through some function 
-     * or algorithm. By specifying a parameterized treatment string with this 
-     * method, a developer may apply arbitrary SQL upon input credential data.
+     *
+     * In many cases, passwords and other sensitive data are encrypted, hashed, encoded,
+     * obscured, or otherwise treated through some function or algorithm. By specifying a
+     * parameterized treatment string with this method, a developer may apply arbitrary SQL
+     * upon input credential data.
+     *
+     * Examples:
+     *
+     *  'PASSWORD(?)'
+     *  'MD5(?)'
      *
      * @param  string $treatment
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -160,7 +186,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Set the value to be used as the identity
+     * setIdentity() - set the value to be used as the identity
      *
      * @param  string $value
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -172,9 +198,8 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Set the credential value to be used, optionally can specify a treatment
-     * to be used, should be supplied in parameterized form, such as 'MD5(?)' 
-     * or 'PASSWORD(?)'
+     * setCredential() - set the credential value to be used, optionally can specify a treatment
+     * to be used, should be supplied in parameterized form, such as 'MD5(?)' or 'PASSWORD(?)'
      *
      * @param  string $credential
      * @return Zend_Auth_Adapter_Doctrine_Table Provides a fluent interface
@@ -186,7 +211,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * Returns the result row as a stdClass object
+     * getResultRowObject() - Returns the result row as a stdClass object
      *
      * @param  string|array $returnColumns
      * @param  string|array $omitColumns
@@ -201,38 +226,40 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
         $returnObject = new stdClass();
 
         if (null !== $returnColumns) {
+
             $availableColumns = array_keys($this->_resultRow);
             foreach ( (array) $returnColumns as $returnColumn) {
                 if (in_array($returnColumn, $availableColumns)) {
                     $returnObject->{$returnColumn} = $this->_resultRow[$returnColumn];
                 }
             }
-
             return $returnObject;
+
         } elseif (null !== $omitColumns) {
+
             $omitColumns = (array) $omitColumns;
             foreach ($this->_resultRow as $resultColumn => $resultValue) {
                 if (!in_array($resultColumn, $omitColumns)) {
                     $returnObject->{$resultColumn} = $resultValue;
                 }
             }
-
             return $returnObject;
+
         } else {
+
             foreach ($this->_resultRow as $resultColumn => $resultValue) {
                 $returnObject->{$resultColumn} = $resultValue;
             }
-
             return $returnObject;
+
         }
     }
 
     /**
-     * Defined by Zend_Auth_Adapter_Interface.  This method is called to 
-     * attempt an authentication. Previous to this call, this adapter would 
-     * have already been configured with all necessary information to 
-     * successfully connect to a database table and attempt to find a record 
-     * matching the provided identity
+     * authenticate() - defined by Zend_Auth_Adapter_Interface.  This method is called to 
+     * attempt an authentication.  Previous to this call, this adapter would have already
+     * been configured with all necessary information to successfully connect to a database
+     * table and attempt to find a record matching the provided identity.
      *
      * @throws Zend_Auth_Adapter_Exception if answering the authentication query is impossible
      * @return Zend_Auth_Result
@@ -243,7 +270,7 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
         $dbSelect = $this->_authenticateCreateSelect();
         $resultIdentities = $this->_authenticateQuerySelect($dbSelect);
         
-        if (($authResult = $this->_authenticateValidateResultset($resultIdentities)) instanceof Zend_Auth_Result) {
+        if ( ($authResult = $this->_authenticateValidateResultset($resultIdentities)) instanceof Zend_Auth_Result) {
             return $authResult;
         }
         
@@ -252,11 +279,10 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * This method abstracts the steps involved with making sure that this 
-     * adapter was indeed setup properly with all required peices of 
-     * information
+     * _authenticateSetup() - This method abstracts the steps involved with making sure
+     * that this adapter was indeed setup properly with all required peices of information.
      *
-     * @throws Zend_Auth_Adapter_Exception
+     * @throws Zend_Auth_Adapter_Exception - in the event that setup was not done properly
      * @return true
      */
     protected function _authenticateSetup()
@@ -288,53 +314,61 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
         $this->_authenticateResultInfo = array(
             'code'     => Zend_Auth_Result::FAILURE,
             'identity' => $this->_identity,
-            'messages' => array(),
-        );
+            'messages' => array()
+            );
             
         return true;
     }
 
     /**
-     * Create the query
+     * _authenticateCreateSelect() - This method creates a Zend_Db_Select object that
+     * is completely configured to be queried against the database.
      *
      * @return Doctrine_Query
      */
     protected function _authenticateCreateSelect()
     {
-        if (empty($this->_credentialTreatment) || (false === strpos($this->_credentialTreatment, "?"))) {
+        // build credential expression
+        if (empty($this->_credentialTreatment) || (strpos($this->_credentialTreatment, "?") === false)) {
             $this->_credentialTreatment = '?';
         }
-        
-        $q = Doctrine_Query::create($this->getConnection())
-            ->from($this->_tableName)
-            ->select('*, ('.$this->_credentialColumn.' = '.str_replace('?', $this->getConnection()->quote($this->_credential), $this->_credentialTreatment).') AS zend_auth_credential_match')
-            ->addWhere($this->_identityColumn .' = ?', $this->_identity);
+		
+		$dbSelect = Doctrine_Query::create($this->getConnection())
+					->from($this->_tableName)
+					->select('*, ('.$this->_credentialColumn.' = '.str_replace('?', 
+						$this->getConnection()->quote($this->_credential), $this->_credentialTreatment).') AS zend_auth_credential_match')
+					->addWhere($this->_identityColumn .' = ?', $this->_identity);
 
-        return $q;
+        return $dbSelect;
     }
 
     /**
-     * Perform the query
+     * _authenticateQuerySelect() - This method accepts a Doctrine_Query object and
+     * performs a query against the database with that object.
      *
-     * @param Doctrine_Query $q
+     * @param Doctrine_Query $dbSelect
+     * @throws Zend_Auth_Adapter_Exception - when a invalid select object is encoutered
      * @return array
-     * @throws Zend_Auth_Adapter_Exception
      */
     protected function _authenticateQuerySelect(Doctrine_Query $dbSelect)
     {
         try {
-            $resultIdentities = $q->execute()->toArray();
+			$resultIdentities = $dbSelect->execute()->toArray();
         } catch (Exception $e) {
+            /**
+             * @see Zend_Auth_Adapter_Exception
+             */
             require_once 'Zend/Auth/Adapter/Exception.php';
-            throw new Zend_Auth_Adapter_Exception('The supplied parameters to Zend_Auth_Adapter_Doctrine_Record failed to produce a valid sql statement, please check table and column names for validity.');
+            throw new Zend_Auth_Adapter_Exception('The supplied parameters to Zend_Auth_Adapter_Doctrine_Record failed to '
+                                                . 'produce a valid sql statement, please check table and column names '
+                                                . 'for validity.');
         }
-
         return $resultIdentities;
     }
 
     /**
-     * This method attempts to make certian that only one record was returned 
-     * in the result set
+     * _authenticateValidateResultSet() - This method attempts to make certian that only one
+     * record was returned in the result set
      *
      * @param array $resultIdentities
      * @return true|Zend_Auth_Result
@@ -355,8 +389,8 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
 
     /**
-     * This method attempts to validate that the record in the result set is 
-     * indeed a record that matched the identity provided to this adapter
+     * _authenticateValidateResult() - This method attempts to validate that the record in the 
+     * result set is indeed a record that matched the identity provided to this adapter.
      *
      * @param array $resultIdentity
      * @return Zend_Auth_Result
@@ -378,8 +412,8 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
     }
     
     /**
-     * This method creates a Zend_Auth_Result object from the information that 
-     * has been collected during the authenticate() attempt
+     * _authenticateCreateAuthResult() - This method creates a Zend_Auth_Result object
+     * from the information that has been collected during the authenticate() attempt.
      *
      * @return Zend_Auth_Result
      */
@@ -389,6 +423,6 @@ class Parables_Auth_Adapter_Doctrine implements Zend_Auth_Adapter_Interface
             $this->_authenticateResultInfo['code'],
             $this->_authenticateResultInfo['identity'],
             $this->_authenticateResultInfo['messages']
-        );
+            );
     }
 }

@@ -1,35 +1,16 @@
-Parables is a sandbox for my personal experimental work with the Zend
-Framework as well as proposals submitted to the ZF project.
+Parables is a sandbox for experimental Zend Framework components. The majority
+of these components are integration points between the ZF and Doctrine OR/M.
+However, additional components not related to Doctrine/ZF integration are also
+included.
 
-See http://framework.zend.com/wiki/display/ZFPROP/Home
+For the sake of convenience, components are included which are not my work.
+These components and their authors are noted below.
 
-The auth adapter and paginator adapter are not my work, but are included here
-for convenience and so as not to recreate the wheel. Thanks to the authors of
-those components. I hope to see a Doctrine extras library at some point but
-understand if is not a likely priority for the ZF team. In the meantime..
+The auth adapter was developed by Jason Eisenmenger & David A. Werner. See
+http://framework.zend.com/wiki/pages/viewpage.action?pageId=3866950 for
+additional information.
 
-Parables/
-|-- Application
-|   `-- Resource
-|       |-- Doctrine
-|       |   |-- Connections.php
-|       |   `-- Paths.php
-|       |-- Doctrine.php
-|       |-- Logs.php
-|       `-- Namespaces.php
-|-- Auth
-|   `-- Adapter
-|       `-- Doctrine.php
-|-- Controller
-|   `-- Plugin
-|       `-- Profiler.php
-|-- Log
-|   `-- Writer
-|       `-- Doctrine.php
-|-- Paginator
-|   `-- Adapter
-|       `-- Doctrine.php
-`-- Session
-    `-- SaveHandler
-        `-- Doctrine.php
+The paginator adapter was developed by Jason Eisenmenger. See
+http://framework.zend.com/wiki/display/ZFPROP/Zend_Paginator_Adapter_Doctrine+-+Jason+Eisenmenger
+for additional information.
 
