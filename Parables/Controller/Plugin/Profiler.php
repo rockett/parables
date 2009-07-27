@@ -35,7 +35,7 @@ class Parables_Controller_Plugin_Profiler extends Zend_Controller_Plugin_Abstrac
     public function dispatchLoopShutdown()
     {
         $this->_logEvent('dispatchLoopShutdown');
-        $this->_logDoctrine(true);
+        $this->_logDoctrine(true, true);
     }
 
     private function _getTime()

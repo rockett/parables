@@ -1,5 +1,6 @@
 <?php
-class Parables_Application_Resource_Doctrine_Connections extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctrineconnections extends 
+    Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Doctrine_Connection_Common
@@ -14,12 +15,19 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
      */
     public function init()
     {
+        // @bug The fallback autoloader must be enabled
+        $autoloader = Zend_Loader_Autoloader::getInstance();
+        if (!$autoloader->isFallbackAutoloader()) {
+            $autoloader->setFallbackAutoloader(true);
+        }
+
         $manager = Doctrine_Manager::getInstance();
 
         foreach ($this->getOptions() as $key => $value) {
             if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception('Invalid Doctrine connection resource.');
+                throw new Zend_Application_Resource_Exception('Invalid 
+                    Doctrine connection resource.');
             }
 
             if ($dsn = $this->_getDsn($value['dsn'])) {
@@ -48,7 +56,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
             $class = $options['class'];
             if (class_exists($class)) {
                 $cacheOptions = array();
-                if ((is_array($options['options'])) && (array_key_exists('options', $options))) {
+                if ((is_array($options['options'])) && 
+                    (array_key_exists('options', $options))) {
                     $cacheOptions = $options['options'];
                 }
                 return new $class($cacheOptions);
@@ -84,7 +93,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
                 $options);
         } else {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Invalid Doctrine connection resource dsn.');
+            throw new Zend_Application_Resource_Exception('Invalid Doctrine 
+                connection resource dsn.');
         }
     }
 
@@ -138,7 +148,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
                         $this->_current->setAttribute($key, $options);
                     } else {
                         require_once 'Zend/Application/Resource/Exception.php';
-                        throw new Zend_Application_Resource_Exception('Invalid Doctrine resource attribute.');
+                        throw new Zend_Application_Resource_Exception('Invalid 
+                            Doctrine resource attribute.');
                     }
                     break;
             }
@@ -175,7 +186,8 @@ class Parables_Application_Resource_Doctrine_Connections extends Zend_Applicatio
 
                 default:
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Invalid Doctrine resource listener.');
+                    throw new Zend_Application_Resource_Exception('Invalid 
+                        Doctrine resource listener.');
             }
         }
     }

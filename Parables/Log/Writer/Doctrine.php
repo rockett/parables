@@ -2,9 +2,9 @@
 class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
 {
     /**
-     * @var string
+     * @var null|string
      */
-    private $_class = null;
+    private $_modelClass = null;
 
     /**
      * @var null|array
@@ -14,19 +14,18 @@ class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
     /**
      * Constructor
      *
-     * @param   string $class
+     * @param   string $modelClass
      * @param   array $columnMap
      * @return  void
      * @throws  Zend_Log_Exception
      */
-    public function __construct($class, $columnMap = null)
+    public function __construct($modelClass, $columnMap = null)
     {
-        if (!class_exists($class)) {
+        if ((!is_string($modelClass)) || (!class_exists($modelClass))) {
             require_once 'Zend/Log/Exception.php';
-            throw new Zend_Log_Exception("Invalid model class.");
+            throw new Zend_Log_Exception('Invalid model class.');
         }
-
-        $this->_class = $class;
+        $this->_modelClass = $modelClass;
         $this->_columnMap = $columnMap;
     }
 
@@ -60,7 +59,7 @@ class Parables_Log_Writer_Doctrine extends Zend_Log_Writer_Abstract
             }
         }
 
-        $entry = new $this->_class();
+        $entry = new $this->_modelClass();
         $entry->fromArray($data);
         $entry->save();
     }

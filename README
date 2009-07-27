@@ -1,16 +1,44 @@
-Parables is a sandbox for experimental Zend Framework components. The majority
-of these components are integration points between the ZF and Doctrine OR/M.
-However, additional components not related to Doctrine/ZF integration are also
-included.
+Parables is a collection of Zend Framework components. Many of these
+components provide integration points between the ZF and Doctrine.
 
-For the sake of convenience, components are included which are not my work.
-These components and their authors are noted below.
+--------------------
 
-The auth adapter was developed by Jason Eisenmenger & David A. Werner. See
-http://framework.zend.com/wiki/pages/viewpage.action?pageId=3866950 for
-additional information.
+Application Resource Plugins:
 
-The paginator adapter was developed by Jason Eisenmenger. See
-http://framework.zend.com/wiki/display/ZFPROP/Zend_Paginator_Adapter_Doctrine+-+Jason+Eisenmenger
-for additional information.
+- Defaultnamespace provides initialization of the default session namespace
+
+- Doctrinemanager provides configuration of Doctrine_Manager
+
+- Doctrineconnections provides configuration of Doctrine_Connections
+
+- Doctrinepaths provides configuration of Doctrine paths
+
+- Doctype provides configuration of doctype declarations
+
+- Dojo provides configuration of Zend_Dojo
+
+- Headlinks provides configuration of <link> elements
+
+- Headmetas provides configuration of <meta> elements
+
+- Headscripts provides configuration of <script> elements
+
+- Headstyles provides configuration of <style> elements
+
+- Headtitles provides configuration of the <title> element
+
+- Log provides configuration of logging resources
+
+--------------------
+
+Doctrine Profiler Front Controller Plugin provides Doctrine_Connection
+profiling information to Firebug
+
+--------------------
+
+Doctrine Log Writer logs data to a Doctrine_Table
+
+--------------------
+
+Doctrine Session SaveHandler saves session data to a Doctrine_Table
 

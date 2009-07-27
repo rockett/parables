@@ -13,7 +13,7 @@ class Parables_Application_Resource_Defaultnamespace extends Zend_Application_Re
      */
     public function init()
     {
-        // Ensure that session options have been set
+        // Ensure session is initialized
         $this->getBootstrap()->bootstrap('session');
         return $this->getDefaultnamespace();
     }

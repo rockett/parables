@@ -15,21 +15,20 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
     {
         $log = $this->getLog();
 
-        foreach ($this->getOptions() as $key => $values) {
+        foreach ($this->getOptions() as $key => $value) {
             switch (strtolower($key)) {
-                case 'filters':
+                case 'filters': // @todo Filter support
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception('Unsupported option.');
                     break;
 
-                case 'formatters':
+                case 'formatters': // @todo Formatter support
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception('Unsupported option.');
                     break;
 
                 case 'writers':
-                    if (!empty($values)) {
-                        $writers = $this->getWriters($values);
-                        foreach ($writers as $writer) {
-                            $log->addWriter($writer);
-                        }
-                    }
+                    $this->getWriters($value);
                     break;
 
                 default:
@@ -57,57 +56,60 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
     /**
      * Retrieve writers
      *
-     * @param   array $options
-     * @return  array
+     * @param   array $writers
+     * @return  void
      */
-    public function getWriters(array $options = null)
+    public function getWriters(array $writers = null)
     {
-        $writers = array();
-
-        foreach ($options as $writer => $writerOptions) {
-            switch ($writer) {
+        foreach ($writers as $key => $value) {
+            switch (strtolower($key)) {
                 case 'stream':
-                    if (!empty($writerOptions['path'])) {
-                        $path = (string) $writerOptions['path'];
+                    if (!empty($value['path'])) {
+                        $path = $value['path'];
                         $mode = 'a';
-
-                        if (!empty($writerOptions['mode'])) {
-                            $mode = (string) $writerOptions['mode'];
+                        if (!empty($value['mode'])) {
+                            $mode = $value['mode'];
                         }
 
-                        $writers[] = new Zend_Log_Writer_Stream($path, $mode);
+                        $this->_log->addWriter(new Zend_Log_Writer_Stream($path, $mode));
                     }
                     break;
 
                 case 'db':
+                    // @todo Zend_Db writer support
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception('Unsupported log writer.');
                     break;
 
                 case 'doctrine':
-                    if (!empty($writerOptions['class'])) {
-                        $class = (string) $writerOptions['class'];
-
+                    if (!empty($value['modelClass'])) {
                         $columnMap = null;
-                        if (!empty($writerOptions['columnMap'])) {
-                            $columnMap = (array) $writerOptions['columnMap'];
+                        if (!empty($value['columnMap'])) {
+                            $columnMap = $value['columnMap'];
                         }
+                        $modelClass = $value['modelClass'];
 
-                        $writers[] = new Parables_Log_Writer_Doctrine($class, $columnMap);
+                        require_once 'Parables/Log/Writer/Doctrine.php';
+                        $this->_log->addWriter(new Parables_Log_Writer_Doctrine($modelClass, $columnMap));
                     }
                     break;
 
                 case 'email':
+                    // @todo Email writer support
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception('Unsupported log writer.');
                     break;
 
                 case 'firebug':
-                    $writers[] = new Zend_Log_Writer_Firebug();
+                    $this->_log->addWriter(new Zend_Log_Writer_Firebug());
                     break;
 
                 case 'mock':
-                    $writers[] = new Zend_Log_Writer_Mock();
+                    $this->_log->addWriter(new Zend_Log_Writer_Mock());
                     break;
 
                 case 'null':
-                    $writers[] = new Zend_Log_Writer_Null();
+                    $this->_log->addWriter(new Zend_Log_Writer_Null());
                     break;
 
                 default:
@@ -115,7 +117,5 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
                     throw new Zend_Application_Resource_Exception('Invalid log writer.');
             }
         }
-
-        return $writers;
     }
 }
