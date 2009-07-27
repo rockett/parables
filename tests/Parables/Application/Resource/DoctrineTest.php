@@ -4,6 +4,7 @@
  */
 require_once 'Zend/Loader/Autoloader.php';
 
+// @todo Refactor into 3 separate test classes
 class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -46,36 +47,32 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     public function testOptionsPassedToResourceAreUsedToSetDoctrineManagerState()
     {
         $options = array(
-            'manager' => array(
-                'export'        => 'all',
-                'model_loading' => 'conservative',
-                'portability'   => 'all',
-                'validate'      => 'all',
-            ),
+            'attr_export'        => 'export_all',
+            'attr_model_loading' => 'model_loading_conservative',
+            'attr_portability'   => 'portability_all',
+            'attr_validate'      => 'validate_all',
         );
 
-        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrinemanager($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
         $manager = Doctrine_Manager::getInstance();
 
-        $this->assertEquals(Doctrine::EXPORT_ALL, $manager->getAttribute('export'));
-        $this->assertEquals(Doctrine::MODEL_LOADING_CONSERVATIVE, $manager->getAttribute('model_loading'));
-        $this->assertEquals(Doctrine::PORTABILITY_ALL, $manager->getAttribute('portability'));
-        $this->assertEquals(Doctrine::VALIDATE_ALL, $manager->getAttribute('validate'));
+        $this->assertEquals(Doctrine::EXPORT_ALL, $manager->getAttribute(Doctrine::ATTR_EXPORT));
+        $this->assertEquals(Doctrine::MODEL_LOADING_CONSERVATIVE, $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING));
+        $this->assertEquals(Doctrine::PORTABILITY_ALL, $manager->getAttribute(Doctrine::ATTR_PORTABILITY));
+        $this->assertEquals(Doctrine::VALIDATE_ALL, $manager->getAttribute(Doctrine::ATTR_VALIDATE));
     }
 
     public function testOptionsPassedToResourceAreUsedToSetDoctrineConnections()
     {
         $options = array(
-            'connections' => array(
-                'demo' => array(
-                    'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
-                ),
+            'demo' => array(
+                'dsn' => 'sqlite:///' . realpath(__FILE__) . '/../../_files/test.db',
             ),
         );
 
-        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrineconnections($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
         $manager = Doctrine_Manager::getInstance();
@@ -89,23 +86,20 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     {
         $currentPath = realpath(__FILE__);
         $options = array(
-            'paths' => array(
-                'data_fixtures_path'    => $currentPath . '/../../doctrine/data/fixtures',
-                'migrations_path'       => $currentPath . '/../../doctrine/migrations',
-                'sql_path'              => $currentPath . '/../../doctrine/data/sql',
-                'yaml_schema_path'      => $currentPath . '/../../doctrine/schema',
-            ),
+            'data_fixtures_path'    => $currentPath . '/../../doctrine/data/fixtures',
+            'migrations_path'       => $currentPath . '/../../doctrine/migrations',
+            'sql_path'              => $currentPath . '/../../doctrine/data/sql',
+            'yaml_schema_path'      => $currentPath . '/../../doctrine/schema',
         );
 
-        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrinepaths($options);
         $resource->setBootstrap($this->bootstrap);
         $values = $resource->init();
-        $paths = $values['paths'];
 
-        $this->assertArrayHasKey('data_fixtures_path', $paths);
-        $this->assertArrayHasKey('migrations_path', $paths);
-        $this->assertArrayHasKey('sql_path', $paths);
-        $this->assertArrayHasKey('yaml_schema_path', $paths);
+        $this->assertArrayHasKey('data_fixtures_path', $values);
+        $this->assertArrayHasKey('migrations_path', $values);
+        $this->assertArrayHasKey('sql_path', $values);
+        $this->assertArrayHasKey('yaml_schema_path', $values);
     }
 
     /**
@@ -114,12 +108,10 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     public function testMissingDsnConnectionOptionThrowsException()
     {
         $options = array(
-            'connections' => array(
-                'demo' => array(),
-            ),
+            'demo' => array(),
         );
 
-        $resource = new Parables_Application_Resource_Doctrine($options);
+        $resource = new Parables_Application_Resource_Doctrineconnections($options);
         $resource->setBootstrap($this->bootstrap);
         $resource->init();
     }

@@ -6,6 +6,7 @@ class Parables_Application_Resource_Doctrinemanager extends
      * Defined by Zend_Application_Resource_Resource
      * 
      * @return  void
+     * @throws  Zend_Application_Resource_Exception
      */
     public function init()
     {
@@ -15,41 +16,63 @@ class Parables_Application_Resource_Doctrinemanager extends
             $autoloader->setFallbackAutoloader(true);
         }
 
-        $this->setManagerAttributes();
-    }
+        // Get Doctrine constants
+        $reflect = new ReflectionClass('Doctrine');
+        $doctrineConstants = $reflect->getConstants();
 
-    /**
-     * Set manager attributes
-     *
-     * @return  void
-     * @throws Zend_Application_Resource_Exception
-     */
-    public function setManagerAttributes()
-    {
+        // Get manager instance
         $manager = Doctrine_Manager::getInstance();
 
         foreach ($this->getOptions() as $key => $value) {
-            switch (strtolower($key))
-            {
-                case 'query_cache':
-                case 'result_cache':
+            switch (strtoupper($key)) {
+                case 'ATTR_RESULT_CACHE':
                     if ($cache = $this->_getCache($value)) {
-                        $manager->setAttribute($key, $cache);
+                        $manager->setAttribute(Doctrine::ATTR_RESULT_CACHE, 
+                            $cache);
+                    }
+                    break;
+
+                case 'ATTR_QUERY_CACHE':
+                    if ($cache = $this->_getCache($value)) {
+                        $manager->setAttribute(Doctrine::ATTR_QUERY_CACHE, 
+                            $cache);
                     }
                     break;
 
                 default:
-                    if (is_string($value)) {
-                        $manager->setAttribute($key, $value);
-                    } elseif (is_array($value)) {
-                        $options = array();
-                        foreach ($value as $subKey => $subValue) {
-                            $options[$subKey] = $subValue;
+                    if (array_key_exists(strtoupper($key), 
+                    $doctrineConstants)) {
+                        $numericAttr = $doctrineConstants[strtoupper($key)];
+
+                        if (is_int($value)) {
+                            $manager->setAttribute($numericAttr, $value);
+                        } elseif (is_string($value)) {
+                            if (!array_key_exists(strtoupper($value), 
+                                $doctrineConstants)) {
+                                require_once 
+                                    'Zend/Application/Resource/Exception.php';
+                                throw new 
+                                    Zend_Application_Resource_Exception('Invalid 
+                                        manager attribute.');
+                            }
+
+                            $numericValue = 
+                                $doctrineConstants[strtoupper($value)];
+                            $manager->setAttribute($numericAttr, 
+                                $numericValue);
+                        } elseif (is_array($value)) {
+                            $options = array();
+                            foreach ($value as $subKey => $subValue) {
+                                $options[$subKey] = $subValue;
+                            }
+                            $manager->setAttribute($numericAttr, $options);
+                        } else {
+                            require_once 
+                                'Zend/Application/Resource/Exception.php';
+                            throw new 
+                                Zend_Application_Resource_Exception('Invalid 
+                                    manager attribute.');
                         }
-                        $manager->setAttribute($key, $options);
-                    } else {
-                        require_once 'Zend/Application/Resource/Exception.php';
-                        throw new Zend_Application_Resource_Exception('Invalid Doctrine resource attribute.');
                     }
                     break;
             }
@@ -68,7 +91,8 @@ class Parables_Application_Resource_Doctrinemanager extends
             $class = $options['class'];
             if (class_exists($class)) {
                 $cacheOptions = array();
-                if ((is_array($options['options'])) && (array_key_exists('options', $options))) {
+                if ((is_array($options['options'])) && 
+                    (array_key_exists('options', $options))) {
                     $cacheOptions = $options['options'];
                 }
                 return new $class($cacheOptions);

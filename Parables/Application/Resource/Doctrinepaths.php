@@ -49,8 +49,7 @@ class Parables_Application_Resource_Doctrinepaths extends
             }
         } else {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Invalid model paths 
-                option.');
+            throw new Zend_Application_Resource_Exception('Invalid model_path.');
         }
     }
 }

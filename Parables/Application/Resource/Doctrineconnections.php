@@ -5,7 +5,12 @@ class Parables_Application_Resource_Doctrineconnections extends
     /**
      * @var Doctrine_Connection_Common
      */
-    protected $_current;
+    protected $_currentConn = null;
+
+    /**
+     * @var array of reflected constants
+     */
+    protected $_doctrineConstants = array();
 
     /**
      * Defined by Zend_Application_Resource_Resource
@@ -21,25 +26,145 @@ class Parables_Application_Resource_Doctrineconnections extends
             $autoloader->setFallbackAutoloader(true);
         }
 
+        // Get Doctrine constants
+        $reflect = new ReflectionClass('Doctrine');
+        $this->_doctrineConstants = $reflect->getConstants();
+
+        // Get manager instance
         $manager = Doctrine_Manager::getInstance();
 
+        // Setup connections, connection attributes and listeners
         foreach ($this->getOptions() as $key => $value) {
-            if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
+            // Fail if a DSN isn't provided
+            if ((!array_key_exists('dsn', $value)) || (!is_array($value))) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception('Invalid 
-                    Doctrine connection resource.');
+                throw new Zend_Application_Resource_Exception('A valid DSN is 
+                    required.');
             }
 
             if ($dsn = $this->_getDsn($value['dsn'])) {
-                $this->_current = $manager->openConnection($dsn, $key);
+                // Open a connection
+                $this->_currentConn = $manager->openConnection($dsn, $key);
 
+                // Set connection attributes if provided
                 if (array_key_exists('attributes', $value)) {
-                    $this->_setAttributes($value['attributes']);
+                    $this->setConnectionAttributes($value['attributes']);
                 }
 
+                // Set connection listeners if provided
                 if (array_key_exists('listeners', $value)) {
-                    $this->_setListeners($value['listeners']);
+                    $this->setConnectionListeners($value['listeners']);
                 }
+            }
+        }
+    }
+
+    /**
+     * Set connection attributes
+     *
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
+     */
+    public function setConnectionAttributes()
+    {
+        $options = $this->getOptions();
+
+        if (array_key_exists('attributes', $options)) {
+            foreach ($options['attributes'] as $key => $value) {
+                switch (strtoupper($key)) {
+                    case 'ATTR_RESULT_CACHE':
+                        if ($cache = $this->_getCache($value)) {
+                            $this->_currentConn->setAttribute(Doctrine::ATTR_RESULT_CACHE, 
+                                $cache);
+                        }
+                        break;
+
+                    case 'ATTR_QUERY_CACHE':
+                        if ($cache = $this->_getCache($value)) {
+                            $this->_currentConn->setAttribute(Doctrine::ATTR_QUERY_CACHE, 
+                                $cache);
+                        }
+                        break;
+
+                    default:
+                        if (array_key_exists(strtoupper($key), 
+                        $this->_doctrineConstants)) {
+
+                            $numericAttr = 
+                                $this->_doctrineConstants[strtoupper($key)];
+
+                            if (is_int($value)) {
+                                $this->_currentConn->setAttribute($numericAttr, 
+                                    $value);
+                            } elseif (is_string($value)) {
+                                if (!array_key_exists(strtoupper($value), 
+                                $this->_doctrineConstants)) {
+                                    require_once 
+                                        'Zend/Application/Resource/Exception.php';
+                                    throw new 
+                                        Zend_Application_Resource_Exception('Invalid 
+                                            connection attribute.');
+                                }
+
+                                $numericValue = 
+                                    $this->_doctrineConstants[strtoupper($value)];
+                                $this->_currentConn->setAttribute($numericAttr, 
+                                    $numericValue);
+                            } elseif (is_array($value)) {
+                                $options = array();
+                                foreach ($value as $subKey => $subValue) {
+                                    $options[$subKey] = $subValue;
+                                }
+                                $this->_currentConn->setAttribute($numericAttr, 
+                                    $options);
+                            } else {
+                                require_once 
+                                    'Zend/Application/Resource/Exception.php';
+                                throw new 
+                                    Zend_Application_Resource_Exception('Invalid 
+                                        connection attribute.');
+                            }
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Set connection listeners
+     *
+     * @param   array $options
+     * @return  void
+     * @throws  Zend_Application_Resource_Exception
+     */
+    public function setConnectionListeners(array $options = null)
+    {
+        foreach ($options as $key => $value) {
+            switch (strtoupper($key))
+            {
+                case 'ATTR_LISTENER':
+                    foreach ($value as $alias => $class) {
+                        if (class_exists($class)) {
+                            $this->_currentConn->addListener(new $class(), 
+                            $alias);
+                        }
+                    }
+                    break;
+
+                case 'ATTR_RECORD_LISTENER':
+                    foreach ($value as $alias => $class) {
+                        if (class_exists($class)) {
+                            $this->_currentConn->addRecordListener(new 
+                                $class(), $alias);
+                        }
+                    }
+                    break;
+
+                default:
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception('Invalid 
+                        connection listener.');
             }
         }
     }
@@ -93,8 +218,7 @@ class Parables_Application_Resource_Doctrineconnections extends
                 $options);
         } else {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Invalid Doctrine 
-                connection resource dsn.');
+            throw new Zend_Application_Resource_Exception('Invalid DSN.');
         }
     }
 
@@ -117,78 +241,5 @@ class Parables_Application_Resource_Doctrineconnections extends
         }
 
         return $optionsString;
-    }
-
-    /**
-     * Set connection attributes
-     *
-     * @param   array $options
-     * @return  void
-     * @throws  Zend_Application_Resource_Exception
-     */
-    protected function _setAttributes(array $options = null)
-    {
-        foreach ($options as $key => $value) {
-            switch (strtolower($key)) {
-                case 'query_cache':
-                case 'result_cache':
-                    if ($cache = $this->_getCache($value)) {
-                        $this->_current->setAttribute($key, $cache);
-                    }
-                    break;
-
-                default:
-                    if (is_string($value)) {
-                        $this->_current->setAttribute($key, $value);
-                    } elseif (is_array($value)) {
-                        $options = array();
-                        foreach ($value as $subKey => $subValue) {
-                            $options[$subKey] = $subValue;
-                        }
-                        $this->_current->setAttribute($key, $options);
-                    } else {
-                        require_once 'Zend/Application/Resource/Exception.php';
-                        throw new Zend_Application_Resource_Exception('Invalid 
-                            Doctrine resource attribute.');
-                    }
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Set connection listeners
-     *
-     * @param   array $options
-     * @return  void
-     * @throws  Zend_Application_Resource_Exception
-     */
-    protected function _setListeners(array $options = null)
-    {
-        foreach ($options as $key => $value) {
-            switch (strtolower($key))
-            {
-                case 'connection':
-                    foreach ($value as $alias => $class) {
-                        if (class_exists($class)) {
-                            $this->_current->addListener(new $class, $alias);
-                        }
-                    }
-                    break;
-
-                case 'record':
-                    foreach ($value as $alias => $class) {
-                        if (class_exists($class)) {
-                            $this->_current->addRecordListener(new $class(), $alias);
-                        }
-                    }
-                    break;
-
-                default:
-                    require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Invalid 
-                        Doctrine resource listener.');
-            }
-        }
     }
 }

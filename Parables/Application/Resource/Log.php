@@ -10,6 +10,7 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
      * Initialize log
      *
      * @return  Zend_Log
+     * @throws  Zend_Application_Resource_Exception
      */
     public function init()
     {
@@ -19,12 +20,14 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
             switch (strtolower($key)) {
                 case 'filters': // @todo Filter support
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Unsupported option.');
+                    throw new Zend_Application_Resource_Exception('Unsupported 
+                        option.');
                     break;
 
                 case 'formatters': // @todo Formatter support
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Unsupported option.');
+                    throw new Zend_Application_Resource_Exception('Unsupported 
+                        option.');
                     break;
 
                 case 'writers':
@@ -58,6 +61,7 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
      *
      * @param   array $writers
      * @return  void
+     * @throws  Zend_Application_Resource_Exception
      */
     public function getWriters(array $writers = null)
     {
@@ -71,14 +75,16 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
                             $mode = $value['mode'];
                         }
 
-                        $this->_log->addWriter(new Zend_Log_Writer_Stream($path, $mode));
+                        $this->_log->addWriter(new 
+                            Zend_Log_Writer_Stream($path, $mode));
                     }
                     break;
 
                 case 'db':
                     // @todo Zend_Db writer support
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Unsupported log writer.');
+                    throw new Zend_Application_Resource_Exception('Unsupported 
+                        writer.');
                     break;
 
                 case 'doctrine':
@@ -90,14 +96,17 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
                         $modelClass = $value['modelClass'];
 
                         require_once 'Parables/Log/Writer/Doctrine.php';
-                        $this->_log->addWriter(new Parables_Log_Writer_Doctrine($modelClass, $columnMap));
+                        $this->_log->addWriter(new 
+                            Parables_Log_Writer_Doctrine($modelClass, 
+                            $columnMap));
                     }
                     break;
 
                 case 'email':
                     // @todo Email writer support
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Unsupported log writer.');
+                    throw new Zend_Application_Resource_Exception('Unsupported 
+                        writer.');
                     break;
 
                 case 'firebug':
@@ -114,7 +123,8 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
 
                 default:
                     require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception('Invalid log writer.');
+                    throw new Zend_Application_Resource_Exception('Invalid 
+                        writer.');
             }
         }
     }

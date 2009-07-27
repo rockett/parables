@@ -68,7 +68,8 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
             $config = $config->toArray();
         } elseif (!is_array($config)) {
             require_once 'Zend/Session/SaveHandler/Exception.php';
-            throw new Zend_Session_SaveHandler_Exception('$config must be an instance of Zend_Config or array.');
+            throw new Zend_Session_SaveHandler_Exception('Options must be an 
+                instance of Zend_Config or array.');
         }
 
         foreach ($config as $key => $value) {
@@ -128,7 +129,8 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
     {
         if ($lifetime < 0) {
             require_once 'Zend/Session/SaveHandler/Exception.php';
-            throw new Zend_Session_SaveHandler_Exception();
+            throw new Zend_Session_SaveHandler_Exception('Session lifetime 
+                must be greater than zero.');
         } else if (empty($lifetime)) {
             $this->_lifetime = (int) ini_get('session.gc_maxlifetime');
         } else {
@@ -189,7 +191,8 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
             $this->_primaryKeyColumn = $key;
         } else {
             require_once 'Zend/Session/SaveHandler/Exception.php';
-            throw new Zend_Session_SaveHandler_Exception('Unable to set primary key column(s).');
+            throw new Zend_Session_SaveHandler_Exception('Invalid primary key 
+                column.');
         }
 
         return $this;
@@ -331,7 +334,8 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
     {
         $sessions = Doctrine::getTable($this->_tableName)->findAll();
         foreach ($sessions as $session) {
-            $expiration = $session->{$this->modifiedColumn} + $session->{$this->lifetimeColumn};
+            $expiration = $session->{$this->modifiedColumn} + 
+                $session->{$this->lifetimeColumn};
             if ($expiration < time()) {
                 $session->delete();
             }
@@ -365,6 +369,7 @@ class Parables_Session_SaveHandler_Doctrine implements Zend_Session_SaveHandler_
      */
     protected function _getExpirationTime(Doctrine_Record $record)
     {
-        return (int) $record->{$this->_modifiedColumn} + $this->_getLifetime($record);
+        return (int) $record->{$this->_modifiedColumn} + 
+            $this->_getLifetime($record);
     }
 }
