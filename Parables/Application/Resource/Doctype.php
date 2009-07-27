@@ -1,5 +1,6 @@
 <?php
-class Parables_Application_Resource_Doctype extends Zend_Application_Resource_ResourceAbstract
+class Parables_Application_Resource_Doctype extends 
+    Zend_Application_Resource_ResourceAbstract
 {
     /**
      * @var Zend_View
@@ -7,7 +8,7 @@ class Parables_Application_Resource_Doctype extends Zend_Application_Resource_Re
     protected $_view = null;
 
     /**
-     * Configure doctype
+     * Initialize doctype
      *
      * @return  void
      */
