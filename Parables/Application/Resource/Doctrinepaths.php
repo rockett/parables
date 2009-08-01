@@ -25,8 +25,8 @@ class Parables_Application_Resource_Doctrinepaths extends
                 array.');
         }
 
-        if (array_key_exists('model_path', $options)) {
-            $this->_loadModels($options['model_path']);
+        if (array_key_exists('models_path', $options)) {
+            $this->_loadModels($options['models_path']);
         }
 
         return $options;

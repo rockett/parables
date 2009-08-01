@@ -22,9 +22,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $this->autoloader->setFallbackAutoloader(true);
 
         $this->application = new Zend_Application('testing');
-
         $this->bootstrap = new Zend_Application_Bootstrap_Bootstrap($this->application);
-
         Zend_Controller_Front::getInstance()->resetInstance();
     }
 
@@ -46,22 +44,28 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
 
     public function testOptionsPassedToResourceAreUsedToSetDoctrineManagerState()
     {
-        $options = array(
-            'attr_export'        => 'export_all',
-            'attr_model_loading' => 'model_loading_conservative',
-            'attr_portability'   => 'portability_all',
-            'attr_validate'      => 'validate_all',
-        );
+        $options = array('attributes' => array(
+                            'attr_export'        => 'export_all',
+                            'attr_model_loading' => 
+                            'model_loading_conservative',
+                            'attr_portability'   => 'portability_all',
+                            'attr_validate'      => 'validate_all',
+                        ));
 
-        $resource = new Parables_Application_Resource_Doctrinemanager($options);
+        $resource = new 
+            Parables_Application_Resource_Doctrinemanager($options);
         $resource->setBootstrap($this->bootstrap);
-        $values = $resource->init();
-        $manager = Doctrine_Manager::getInstance();
+        $resource->init();
 
-        $this->assertEquals(Doctrine::EXPORT_ALL, $manager->getAttribute(Doctrine::ATTR_EXPORT));
-        $this->assertEquals(Doctrine::MODEL_LOADING_CONSERVATIVE, $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING));
-        $this->assertEquals(Doctrine::PORTABILITY_ALL, $manager->getAttribute(Doctrine::ATTR_PORTABILITY));
-        $this->assertEquals(Doctrine::VALIDATE_ALL, $manager->getAttribute(Doctrine::ATTR_VALIDATE));
+        $manager = Doctrine_Manager::getInstance();
+        $this->assertEquals('export_all', 
+            $manager->getAttribute(Doctrine::ATTR_EXPORT));
+        $this->assertEquals('model_loading_conservative', 
+            $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING));
+        $this->assertEquals('portability_all', 
+            $manager->getAttribute(Doctrine::ATTR_PORTABILITY));
+        $this->assertEquals('validate_all', 
+            $manager->getAttribute(Doctrine::ATTR_VALIDATE));
     }
 
     public function testOptionsPassedToResourceAreUsedToSetDoctrineConnections()
