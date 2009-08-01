@@ -43,34 +43,36 @@ class Parables_Application_Resource_Doctrinemanager extends
                     attribute.');
             }
 
-            $attrIdx = $doctrineConstants[strtoupper($name)];
-            $attrVal = $value;
+            if ($value) {
+                $attrIdx = $doctrineConstants[strtoupper($name)];
+                $attrVal = $value;
 
-            switch ($attrIdx)
-            {
-                case 150: // ATTR_RESULT_CACHE
-                case 157: // ATTR_QUERY_CACHE
-                    if (!$cache = $this->_getCache($value)) {
-                        require_once 
-                            'Zend/Application/Resource/Exception.php';
-                        throw new Zend_Application_Resource_Exception('Unable 
-                            to retrieve cache.');
-                    }
-                    $attrVal = $cache;
-                    break;
-
-                default:
-                    if (is_array($value)) {
-                        $options = array();
-                        foreach ($value as $subKey => $subValue) {
-                            $options[$subKey] = $subValue;
+                switch ($attrIdx)
+                {
+                    case 150: // ATTR_RESULT_CACHE
+                    case 157: // ATTR_QUERY_CACHE
+                        if (!$cache = $this->_getCache($value)) {
+                            require_once 
+                                'Zend/Application/Resource/Exception.php';
+                            throw new Zend_Application_Resource_Exception('Unable 
+                                to retrieve cache.');
                         }
-                        $attrVal = $options;
-                    }
-                    break;
-            }
+                        $attrVal = $cache;
+                        break;
 
-            $manager->setAttribute($attrIdx, $attrVal);
+                    default:
+                        if (is_array($value)) {
+                            $options = array();
+                            foreach ($value as $subKey => $subValue) {
+                                $options[$subKey] = $subValue;
+                            }
+                            $attrVal = $options;
+                        }
+                        break;
+                }
+
+                $manager->setAttribute($attrIdx, $attrVal);
+            }
         }
     }
 
