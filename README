@@ -30,11 +30,6 @@ Application Resource Plugins:
 
 --------------------
 
-Doctrine Profiler Front Controller Plugin provides Doctrine_Connection
-profiling information to Firebug
-
---------------------
-
 Doctrine Log Writer logs data to a Doctrine_Table
 
 --------------------
