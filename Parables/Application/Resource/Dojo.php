@@ -81,8 +81,7 @@ class Parables_Application_Resource_Dojo extends Zend_Application_Resource_Resou
             }
         }
 
-        if ((array_key_exists('enable', $options)) && 
-            (isset($options['enable']))) {
+        if ((array_key_exists('enable', $options)) && ($options['enable'])) {
             $this->_view->dojo()->enable();
         } else {
             $this->_view->dojo()->disable();
