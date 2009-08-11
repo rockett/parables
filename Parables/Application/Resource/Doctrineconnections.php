@@ -69,7 +69,10 @@ class Parables_Application_Resource_Doctrineconnections extends
             if ($value) {
                 $attrIdx = $doctrineConstants[strtoupper($name)];
                 $attrVal = $value;
-
+                if (array_key_exists(strtoupper($value), $doctrineConstants)) {
+                    $attrVal = $doctrineConstants[strtoupper($value)];
+                }
+                
                 switch ($attrIdx)
                 {
                     case 150: // ATTR_RESULT_CACHE
