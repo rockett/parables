@@ -45,7 +45,7 @@ class Parables_Application_Resource_Doctrinepaths extends
             Doctrine::loadModels($paths);
         } else if (is_array($paths)) {
             foreach($paths as $path) {
-                Doctrine::loadModels($paths);
+                Doctrine::loadModels($path);
             }
         } else {
             require_once 'Zend/Application/Resource/Exception.php';
