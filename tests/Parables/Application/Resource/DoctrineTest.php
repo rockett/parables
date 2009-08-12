@@ -46,8 +46,7 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
     {
         $options = array('attributes' => array(
                             'attr_export'        => 'export_all',
-                            'attr_model_loading' => 
-                            'model_loading_conservative',
+                            'attr_model_loading' => 'model_loading_conservative',
                             'attr_portability'   => 'portability_all',
                             'attr_validate'      => 'validate_all',
                         ));
@@ -58,13 +57,20 @@ class Zend_Application_Resource_DoctrineTest extends PHPUnit_Framework_TestCase
         $resource->init();
 
         $manager = Doctrine_Manager::getInstance();
-        $this->assertEquals('export_all', 
+
+        $reflect = new ReflectionClass('Doctrine');
+        $doctrineConstants = $reflect->getConstants();
+
+        $this->assertEquals($doctrineConstants['EXPORT_ALL'], 
             $manager->getAttribute(Doctrine::ATTR_EXPORT));
-        $this->assertEquals('model_loading_conservative', 
+
+        $this->assertEquals($doctrineConstants['MODEL_LOADING_CONSERVATIVE'], 
             $manager->getAttribute(Doctrine::ATTR_MODEL_LOADING));
-        $this->assertEquals('portability_all', 
+
+        $this->assertEquals($doctrineConstants['PORTABILITY_ALL'], 
             $manager->getAttribute(Doctrine::ATTR_PORTABILITY));
-        $this->assertEquals('validate_all', 
+
+        $this->assertEquals($doctrineConstants['VALIDATE_ALL'], 
             $manager->getAttribute(Doctrine::ATTR_VALIDATE));
     }
 
