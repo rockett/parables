@@ -60,45 +60,52 @@ class Parables_Application_Resource_Doctrineconnections extends
         $reflect = new ReflectionClass('Doctrine');
         $doctrineConstants = $reflect->getConstants();
 
-        foreach ($attributes as $name => $value) {
-            if (!array_key_exists(strtoupper($name), $doctrineConstants)) {
+        $attribs = array_change_key_case($attributes, CASE_UPPER);
+        foreach ($attribs as $name => $value) {
+            if (!array_key_exists($name, $doctrineConstants)) {
                 require_once 'Zend/Application/Resource/Exception.php';
-                throw new Zend_Application_Resource_Exception("Invalid connection attribute $name.");
+                throw new Zend_Application_Resource_Exception("$name is not a 
+                    valid attribute.");
             }
 
-            if ($value) {
-                $attrIdx = $doctrineConstants[strtoupper($name)];
-                $attrVal = $value;
-                if (array_key_exists(strtoupper($value), $doctrineConstants)) {
-                    $attrVal = $doctrineConstants[strtoupper($value)];
-                }
-                
-                switch ($attrIdx)
-                {
-                    case 150: // ATTR_RESULT_CACHE
-                    case 157: // ATTR_QUERY_CACHE
-                        if (!$cache = $this->_getCache($value)) {
-                            require_once 
-                                'Zend/Application/Resource/Exception.php';
-                            throw new Zend_Application_Resource_Exception('Unable 
-                                to retrieve cache.');
-                        }
-                        $attrVal = $cache;
-                        break;
+            $attrIdx = $doctrineConstants[$name];
+            $attrVal = $value;
 
-                    default:
-                        if (is_array($value)) {
-                            $options = array();
-                            foreach ($value as $subKey => $subValue) {
-                                $options[$subKey] = $subValue;
-                            }
-                            $attrVal = $options;
-                        }
-                        break;
+            if (is_string($value)) {
+                if (!array_key_exists(strtoupper($value), $doctrineConstants)) {
+                    require_once 'Zend/Application/Resource/Exception.php';
+                    throw new Zend_Application_Resource_Exception("$value is 
+                        not a valid $name attribute value.");
                 }
 
-                $this->_currentConn->setAttribute($attrIdx, $attrVal);
+                $attrVal = $doctrineConstants[strtoupper($value)];
             }
+
+            switch ($attrIdx)
+            {
+                case 150: // ATTR_RESULT_CACHE
+                case 157: // ATTR_QUERY_CACHE
+                    if (!$cache = $this->_getCache($value)) {
+                        require_once 
+                            'Zend/Application/Resource/Exception.php';
+                        throw new Zend_Application_Resource_Exception('Unable 
+                            to retrieve cache.');
+                    }
+                    $attrVal = $cache;
+                    break;
+
+                default:
+                    if (is_array($value)) {
+                        $options = array();
+                        foreach ($value as $subKey => $subVal) {
+                            $options[$subKey] = $subVal;
+                        }
+                        $attrVal = $options;
+                    }
+                    break;
+            }
+
+            $this->_currentConn->setAttribute($attrIdx, $attrVal);
         }
     }
 

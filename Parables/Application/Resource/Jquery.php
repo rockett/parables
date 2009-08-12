@@ -27,10 +27,9 @@ class Parables_Application_Resource_Jquery extends Zend_Application_Resource_Res
     {
         ZendX_JQuery::enableView($this->_view);
         
-        $options = $this->getOptions();
-
+        $options = array_change_key_case($this->getOptions(), CASE_LOWER);
         foreach ($options as $key => $value) {
-            switch (strtolower($key))
+            switch ($key)
             {
                 case 'cdnssl':
                     $this->_view->jQuery()->setCdnSsl($value);

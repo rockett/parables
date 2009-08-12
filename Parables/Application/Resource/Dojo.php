@@ -27,10 +27,9 @@ class Parables_Application_Resource_Dojo extends Zend_Application_Resource_Resou
     {
         Zend_Dojo::enableView($this->_view);
         
-        $options = $this->getOptions();
-
+        $options = array_change_key_case($this->getOptions(), CASE_LOWER);
         foreach ($options as $key => $value) {
-            switch (strtolower($key))
+            switch ($key)
             {
                 case 'cdnbase':
                     $this->_view->dojo()->setCdnBase($value);

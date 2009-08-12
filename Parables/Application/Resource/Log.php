@@ -16,8 +16,9 @@ class Parables_Application_Resource_Log extends Zend_Application_Resource_Resour
     {
         $log = $this->getLog();
 
-        foreach ($this->getOptions() as $key => $value) {
-            switch (strtolower($key)) {
+        $options = array_change_key_case($this->getOptions(), CASE_LOWER);
+        foreach ($options as $key => $value) {
+            switch ($key) {
                 case 'filters': // @todo Filter support
                     require_once 'Zend/Application/Resource/Exception.php';
                     throw new Zend_Application_Resource_Exception('Unsupported 
