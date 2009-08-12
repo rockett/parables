@@ -15,14 +15,7 @@ class Parables_Application_Resource_Doctrineconnections extends
      */
     public function init()
     {
-        // @bug The fallback autoloader must be enabled
-        $autoloader = Zend_Loader_Autoloader::getInstance();
-        if (!$autoloader->isFallbackAutoloader()) {
-            $autoloader->setFallbackAutoloader(true);
-        }
-
         $manager = Doctrine_Manager::getInstance();
-
         foreach ($this->getOptions() as $key => $value) {
             if ((!is_array($value)) || (!array_key_exists('dsn', $value))) {
                 require_once 'Zend/Application/Resource/Exception.php';

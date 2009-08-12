@@ -11,7 +11,8 @@ class Parables_Application_Resource_Doctrinepaths extends
      */
     public function init()
     {
-        // @bug The fallback autoloader must be enabled
+        // @bug The fallback autoloader must be enabled for non-namespaced 
+        // model loading to work
         $autoloader = Zend_Loader_Autoloader::getInstance();
         if (!$autoloader->isFallbackAutoloader()) {
             $autoloader->setFallbackAutoloader(true);

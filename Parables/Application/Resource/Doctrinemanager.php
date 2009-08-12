@@ -10,12 +10,6 @@ class Parables_Application_Resource_Doctrinemanager extends
      */
     public function init()
     {
-        // @bug The fallback autoloader must be enabled
-        $autoloader = Zend_Loader_Autoloader::getInstance();
-        if (!$autoloader->isFallbackAutoloader()) {
-            $autoloader->setFallbackAutoloader(true);
-        }
-
         $options = $this->getOptions();
         if (array_key_exists('attributes', $options)) {
             $this->_setManagerAttributes($options['attributes']);
