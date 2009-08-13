@@ -11,25 +11,17 @@ class Parables_Application_Resource_Doctrinepaths extends
      */
     public function init()
     {
-        // @bug The fallback autoloader must be enabled for non-namespaced 
-        // model loading to work
+        // @bug The fallback autoloader must be enabled for model loading to 
+        // work
         $autoloader = Zend_Loader_Autoloader::getInstance();
         if (!$autoloader->isFallbackAutoloader()) {
             $autoloader->setFallbackAutoloader(true);
         }
 
         $options = $this->getOptions();
-
-        if (!is_array($options)) {
-            require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Paths must be an 
-                array.');
-        }
-
         if (array_key_exists('models_path', $options)) {
             $this->_loadModels($options['models_path']);
         }
-
         return $options;
     }
 
@@ -50,7 +42,7 @@ class Parables_Application_Resource_Doctrinepaths extends
             }
         } else {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Invalid model_path.');
+            throw new Zend_Application_Resource_Exception('Invalid models_path.');
         }
     }
 }
