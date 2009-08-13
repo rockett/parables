@@ -41,16 +41,6 @@ class Parables_Application_Resource_Doctrinemanager extends
             $attrIdx = $doctrineConstants[$name];
             $attrVal = $value;
 
-            if (is_string($value)) {
-                if (!array_key_exists(strtoupper($value), $doctrineConstants)) {
-                    require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception("$value is 
-                        not a valid $name attribute value.");
-                }
-
-                $attrVal = $doctrineConstants[strtoupper($value)];
-            }
-
             switch ($attrIdx)
             {
                 case 150: // ATTR_RESULT_CACHE
@@ -65,7 +55,11 @@ class Parables_Application_Resource_Doctrinemanager extends
                     break;
 
                 default:
-                    if (is_array($value)) {
+                    if (is_string($value)) {
+                        if (array_key_exists(strtoupper($value), $doctrineConstants)) {
+                            $attrVal = $doctrineConstants[strtoupper($value)];
+                        }
+                    } elseif (is_array($value)) {
                         $options = array();
                         foreach ($value as $subKey => $subVal) {
                             $options[$subKey] = $subVal;
@@ -90,15 +84,14 @@ class Parables_Application_Resource_Doctrinemanager extends
     {
         if (!array_key_exists('class', $options)) {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception("Missing 'class' 
-                cache option.");
+            throw new Zend_Application_Resource_Exception('Missing class option.');
         }
 
         $class = $options['class'];
         if (!class_exists($class)) {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Cache class does 
-                not exist.');
+            throw new Zend_Application_Resource_Exception("$class does not 
+                exist.");
         }
 
         $cacheOptions = array();

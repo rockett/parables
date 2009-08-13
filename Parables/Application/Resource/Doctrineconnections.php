@@ -23,12 +23,10 @@ class Parables_Application_Resource_Doctrineconnections extends
                     required.');
             }
 
-            $dsn = null;
-            if (is_array($value['dsn'])) {
-                $dsn = $this->_buildDsnFromArray($value['dsn']);
-            } else {
-                $dsn = $value['dsn'];
-            }
+            $dsn = (is_array($value['dsn'])) 
+                ? $this->_buildDsnFromArray($value['dsn']) 
+                : $value['dsn'];
+
             $this->_currentConn = $manager->openConnection($dsn, $key);
 
             if (array_key_exists('attributes', $value)) {
@@ -64,16 +62,6 @@ class Parables_Application_Resource_Doctrineconnections extends
             $attrIdx = $doctrineConstants[$name];
             $attrVal = $value;
 
-            if (is_string($value)) {
-                if (!array_key_exists(strtoupper($value), $doctrineConstants)) {
-                    require_once 'Zend/Application/Resource/Exception.php';
-                    throw new Zend_Application_Resource_Exception("$value is 
-                        not a valid $name attribute value.");
-                }
-
-                $attrVal = $doctrineConstants[strtoupper($value)];
-            }
-
             switch ($attrIdx)
             {
                 case 150: // ATTR_RESULT_CACHE
@@ -88,7 +76,11 @@ class Parables_Application_Resource_Doctrineconnections extends
                     break;
 
                 default:
-                    if (is_array($value)) {
+                    if (is_string($value)) {
+                        if (array_key_exists(strtoupper($value), $doctrineConstants)) {
+                            $attrVal = $doctrineConstants[strtoupper($value)];
+                        }
+                    } elseif (is_array($value)) {
                         $options = array();
                         foreach ($value as $subKey => $subVal) {
                             $options[$subKey] = $subVal;
@@ -112,9 +104,13 @@ class Parables_Application_Resource_Doctrineconnections extends
     protected function _setConnectionListeners(array $options = array())
     {
         foreach ($options as $alias => $class) {
-            if (class_exists($class)) {
-                $this->_currentConn->addListener(new $class(), $alias);
+            if (!class_exists($class)) {
+                require_once 'Zend/Application/Resource/Exception.php';
+                throw new Zend_Application_Resource_Exception("$class does not 
+                    exist.");
             }
+
+            $this->_currentConn->addListener(new $class(), $alias);
         }
     }
 
@@ -129,15 +125,14 @@ class Parables_Application_Resource_Doctrineconnections extends
     {
         if (!array_key_exists('class', $options)) {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception("Missing 'class' 
-                cache option.");
+            throw new Zend_Application_Resource_Exception('Missing class option.');
         }
 
         $class = $options['class'];
         if (!class_exists($class)) {
             require_once 'Zend/Application/Resource/Exception.php';
-            throw new Zend_Application_Resource_Exception('Cache class does 
-                not exist.');
+            throw new Zend_Application_Resource_Exception("$class does not 
+                exist.");
         }
 
         $cacheOptions = array();
