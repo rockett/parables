@@ -77,7 +77,7 @@ class Parables_Application_Resource_Doctrineconnections extends
 
                 default:
                     if (is_string($value)) {
-                        $value = strtopupper($value);
+                        $value = strtoupper($value);
                         if (array_key_exists($value, $doctrineConstants)) {
                             $attrVal = $doctrineConstants[$value];
                         }
