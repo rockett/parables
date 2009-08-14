@@ -59,12 +59,6 @@ class Parables_Application_Resource_Doctrinemanager extends
                         if (array_key_exists(strtoupper($value), $doctrineConstants)) {
                             $attrVal = $doctrineConstants[strtoupper($value)];
                         }
-                    } elseif (is_array($value)) {
-                        $options = array();
-                        foreach ($value as $subKey => $subVal) {
-                            $options[$subKey] = $subVal;
-                        }
-                        $attrVal = $options;
                     }
                     break;
             }
