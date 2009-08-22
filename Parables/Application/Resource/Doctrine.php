@@ -1,5 +1,5 @@
 <?php
-class Zend_Application_Resource_Doctrine
+class Parables_Application_Resource_Doctrine
     extends Zend_Application_Resource_ResourceAbstract
 {
     /**
