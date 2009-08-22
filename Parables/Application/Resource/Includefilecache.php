@@ -19,13 +19,12 @@ class Parables_Application_Resource_Includefilecache extends
      */
     public function setIncludeFileCache()
     {
-        $options = $this->getOptions();
-        if (array_key_exists('path', $options)) {
-            if (file_exists($options['path'])) {
-                include_once $options['path'];
+        if ($options = $this->getOptions()) {
+            if ((is_string($options)) && (file_exists($options))) {
+                include_once $options;
             }
 
-            Zend_Loader_PluginLoader::setIncludeFileCache($options['path']);
+            Zend_Loader_PluginLoader::setIncludeFileCache($options);
         }
     }
 }

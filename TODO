@@ -2,16 +2,24 @@ I welcome feedback and patches. Fork at will!!
 
 Here's a list of issues I have with the current implementation:
 
-DRY violations - Code duplication between _setManagerAttributes and
-_setConnectionAttributes as well as _getCache.
+Model autoloading - more on this later. For now, just know that the only
+supported use case is that of non-namespaced/non-modular models generated from
+yaml. You will need to:
 
-Doctrine model loading - Models without namespaces require special autoloading or the
-use of the fallback autoloader even with the models and generated models paths
-on the include path.
+- Add your models_path and generated_models_path to the
+include_path in your entry-point script (e.g. public/index.php)
 
-Adding model paths to the include path - Determine whether this should be
-handled in the Doctrinepaths resource plugin or in the bootstrap (i.e.
-index.php)
+- Add a custom _initAutoload method to your bootstrap(s) consisting of the
+  following:
+
+protected function _initAutoload()
+{
+    $autoloader = Zend_Loader_Autoloader::getInstance();
+    if (!$autoloader->isFallbackAutoloader()) {
+        $autoloader->setFallbackAutoloader(true);
+    }
+    return $autoloader;
+}
 
 Unit testing - Determine how to perform more thorough tests.
 
